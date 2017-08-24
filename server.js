@@ -36,7 +36,90 @@ app.route('/_api/package.json')
 app.route('/')
     .get(function(req, res) {
 		  res.sendFile(process.cwd() + '/views/index.html');
-    })
+    });
+
+app.route('/:input')
+    .get(function(req, res) {
+      /*console.log(req.params);
+      console.log(req.params.input);*/
+      res.send(checkDate(req.params.input));
+  });
+
+/*
+  Function: checkDate
+  input - the input from the url.
+  If it's a valide input, it does converts it all properly.
+*/
+function checkDate(input) {
+  var tempReturnObj = {"unix": null, "natural": null};
+  var unixRegex = /[0-9]{9}/;
+  if (unixRegex.test(input)) {
+    //console.log("it's unix timestamp time.");
+    tempReturnObj['unix'] = input;
+  }
+  if (tempReturnObj.unix === null) {
+    var naturalTimestamp = / /;
+    var splits = input.split(naturalTimestamp);
+
+    var day = parseInt(splits[1]);
+    var month = 1;
+    var year = splits[2];
+    switch(splits[0].toLowerCase()) {
+      case "january":
+        month = 0;
+      break;
+      case "february":
+        month = 1;
+      break;
+      case "march":
+        month = 2;
+      break;
+
+      case "april":
+        month = 3;
+      break;
+      case "may":
+        month = 4;
+      break;
+      case "june":
+        month = 5;
+      break;
+
+      case "july":
+        month = 6;
+      break;
+      case "august":
+        month = 7;
+      break;
+      case "september":
+        month = 8;
+      break;
+
+      case "october":
+        month = 9;
+      break;
+      case "november":
+        month = 10;
+      break;
+      case "december":
+        month = 11;
+      break;
+    }
+
+    var date = new Date(year, month, day);
+    if (date.toDateString().toLowerCase() !== "invalid date") {
+      tempReturnObj.natural = date.toDateString();
+      tempReturnObj.unix = date.getTime()/1000;
+    }
+  } else {
+    //change unix timestamp to date.
+    var tempDate = new Date(input*1000);
+    tempReturnObj['natural'] = tempDate.toDateString();
+  }
+
+  return tempReturnObj;
+}
+
 
 // Respond not found to all the wrong routes
 app.use(function(req, res, next){
