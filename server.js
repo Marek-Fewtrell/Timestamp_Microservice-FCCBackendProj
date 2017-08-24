@@ -32,7 +32,7 @@ app.route('/_api/package.json')
       res.type('txt').send(data.toString());
     });
   });
-  
+
 app.route('/')
     .get(function(req, res) {
 		  res.sendFile(process.cwd() + '/views/index.html');
@@ -50,10 +50,17 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500)
       .type('txt')
       .send(err.message || 'SERVER ERROR');
-  }  
+  }
 })
 
-app.listen(process.env.PORT, function () {
-  console.log('Node.js listening ...');
-});
-
+//For when launched on Glitch.com
+if (process.env.PORT != null) {
+  app.listen(process.env.PORT, function () {
+    console.log('Node.js listening ...');
+  });
+} else {
+  //Set port here.
+  app.listen(23200, function () {
+    console.log('Node.js listening ...');
+  });
+}
